@@ -87,7 +87,7 @@ class SimpleDataGrid extends SimpleWidget
             @columns.splice(index, 0, column_info)
         else
             @columns.push(column_info)
- 
+
         return column_info
 
     removeColumn: (column_key) ->
@@ -106,7 +106,7 @@ class SimpleDataGrid extends SimpleWidget
         if value
             @_url = value
 
-        return @_url            
+        return @_url
 
     selectRow: (row_index) ->
         $rows = @$tbody.find('tr')
@@ -242,7 +242,7 @@ class SimpleDataGrid extends SimpleWidget
         if sortorder == 'asc'
             return SortOrder.ASCENDING
         else if sortorder == 'desc'
-            return SortOrder.DESCENDING            
+            return SortOrder.DESCENDING
         else
             return false
 
@@ -346,7 +346,7 @@ class SimpleDataGrid extends SimpleWidget
             @_fillGrid([])
 
     _fillGrid: (data) ->
-        addRowFromObject = (row) =>
+        addRowFromObject = (row, previous_row) =>
             html = ''
             for column in @columns
                 if column.key of row
@@ -356,10 +356,10 @@ class SimpleDataGrid extends SimpleWidget
                         value = html_escape(value)
 
                     if column.on_generate
-                        value = column.on_generate(value, row)
+                        value = column.on_generate(value, row, previous_row)
                 else
                     if column.on_generate
-                        value = column.on_generate('', row)
+                        value = column.on_generate('', row, previous_row)
                     else
                         value = ''
 
@@ -367,7 +367,7 @@ class SimpleDataGrid extends SimpleWidget
 
             return html
 
-        addRowFromArray = (row) =>
+        addRowFromArray = (row, previous_row) =>
             html = ''
 
             for column, i in @columns
@@ -377,7 +377,7 @@ class SimpleDataGrid extends SimpleWidget
                     value = ''
 
                 if column.on_generate
-                    value = column.on_generate(value, row)
+                    value = column.on_generate(value, row, previous_row)
 
                 html += "<td class=\"sdg-col_#{ column.key }\">#{ value }</td>"
 
@@ -393,23 +393,27 @@ class SimpleDataGrid extends SimpleWidget
 
         fillRows = (rows) =>
             @$tbody.empty()
+            previous_row = null
 
             for row in rows
                 html = generateTr(row)
 
                 if $.isArray(row)
-                    html += addRowFromArray(row)
+                    html += addRowFromArray(row, previous_row)
                 else
-                    html += addRowFromObject(row)
+                    html += addRowFromObject(row, previous_row)
 
                 html += '</tr>'
                 $tr = $(html)
                 $tr.data('row', row)
 
                 if @options.on_generate_tr
-                    @options.on_generate_tr($tr, row)
+                    @options.on_generate_tr($tr, row, previous_row)
 
                 @$tbody.append($tr)
+
+                previous_row = row
+
             return null
 
         fillFooter = (total_pages, row_count) =>
