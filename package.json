@@ -1,0 +1,11 @@
+{
+  "name": "simple-data-grid",
+  "version": "1.0.0",
+  "main": "simple.datagrid.js",
+  "devDependencies": {
+    "coffee-script": "^1.9.2"
+  },
+  "author": "Marco Braak <marco.braak@planet.nl>",
+  "license": "Apache2",
+  "homepage": "https://github.com/mbraak/simple-data-grid"
+}
