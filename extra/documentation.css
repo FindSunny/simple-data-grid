@@ -3,6 +3,10 @@ h1, h2, h3, body {
   font-family: "Open sans", sans-serif;
 }
 
+.header-buttons {
+    margin-top: 16px;
+}
+
 /* jumbotron */
 
 #simpledatagrid {
