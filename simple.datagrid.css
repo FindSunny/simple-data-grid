@@ -32,7 +32,7 @@
     font-size: 12px;
 }
 
-.simple-data-grid thead tr.sdg-sorted:hover {
+.simple-data-grid thead .sdg-sorted:hover {
     cursor: pointer;
 }
 

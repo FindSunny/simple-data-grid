@@ -55,6 +55,7 @@ class SimpleDataGrid extends SimpleWidget
         auto_escape: true
         keyboard_support: false
         parameters: {}
+        unsorted_columns: null
 
     loadData: (data) ->
         @_fillGrid(data)
@@ -291,7 +292,7 @@ class SimpleDataGrid extends SimpleWidget
 
     _bindEvents: ->
         @$el.delegate('tbody tr', 'click', $.proxy(@_clickRow, this))
-        @$el.delegate('thead tr.sdg-sorted', 'click', $.proxy(@_clickHeader, this))
+        @$el.delegate('thead .sdg-sorted', 'click', $.proxy(@_clickHeader, this))
         @$el.delegate('.sdg-pagination a', 'click', $.proxy(@_handleClickPage, this))
 
         if @options.keyboard_support
@@ -460,15 +461,18 @@ class SimpleDataGrid extends SimpleWidget
 
         fillHeader = (row_count) =>
             order_by = @_getOrderByColumn()
-            is_sorted = order_by and (row_count != 0)
 
-            if is_sorted
-                html = '<tr class="sdg-sorted">'
-            else
-                html = '<tr>'
+            html = '<tr>'
 
             for column in @columns
-                html += "<th data-key=\"#{ column.key }\" class=\"sdg-col_#{ column.key }\">"
+                is_sorted = @_isColumnSortable(column.key)
+
+                classes = "sdg-col_#{ column.key }"
+
+                if is_sorted
+                    classes += " sdg-sorted"
+
+                html += "<th data-key=\"#{ column.key }\" class=\"#{ classes }\">"
 
                 if not is_sorted
                     html += column.title
@@ -667,6 +671,18 @@ class SimpleDataGrid extends SimpleWidget
 
         if $tr.length
             @_selectRow($tr)
+
+    _isColumnSortable: (field_name) ->
+        if not @_getOrderByColumn()
+            # grid is not sorted
+            return false
+        else
+            if @options.unsorted_columns
+                return $.inArray(field_name, @options.unsorted_columns) == -1
+            else
+                # all columns are sortable
+                return true
+
 
 SimpleWidget.register(SimpleDataGrid, 'simple_datagrid')
 

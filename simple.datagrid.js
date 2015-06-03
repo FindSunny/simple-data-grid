@@ -193,7 +193,8 @@ limitations under the License.
       on_generate_footer: null,
       auto_escape: true,
       keyboard_support: false,
-      parameters: {}
+      parameters: {},
+      unsorted_columns: null
     };
 
     SimpleDataGrid.prototype.loadData = function(data) {
@@ -487,7 +488,7 @@ limitations under the License.
 
     SimpleDataGrid.prototype._bindEvents = function() {
       this.$el.delegate('tbody tr', 'click', $.proxy(this._clickRow, this));
-      this.$el.delegate('thead tr.sdg-sorted', 'click', $.proxy(this._clickHeader, this));
+      this.$el.delegate('thead .sdg-sorted', 'click', $.proxy(this._clickHeader, this));
       this.$el.delegate('.sdg-pagination a', 'click', $.proxy(this._handleClickPage, this));
       if (this.options.keyboard_support) {
         return $(document).bind('keydown.datagrid', $.proxy(this._handleKeyDown, this));
@@ -689,18 +690,18 @@ limitations under the License.
       })(this);
       fillHeader = (function(_this) {
         return function(row_count) {
-          var class_html, column, html, is_sorted, j, len1, order_by, ref, sort_text;
+          var class_html, classes, column, html, is_sorted, j, len1, order_by, ref, sort_text;
           order_by = _this._getOrderByColumn();
-          is_sorted = order_by && (row_count !== 0);
-          if (is_sorted) {
-            html = '<tr class="sdg-sorted">';
-          } else {
-            html = '<tr>';
-          }
+          html = '<tr>';
           ref = _this.columns;
           for (j = 0, len1 = ref.length; j < len1; j++) {
             column = ref[j];
-            html += "<th data-key=\"" + column.key + "\" class=\"sdg-col_" + column.key + "\">";
+            is_sorted = _this._isColumnSortable(column.key);
+            classes = "sdg-col_" + column.key;
+            if (is_sorted) {
+              classes += " sdg-sorted";
+            }
+            html += "<th data-key=\"" + column.key + "\" class=\"" + classes + "\">";
             if (!is_sorted) {
               html += column.title;
             } else {
@@ -913,6 +914,18 @@ limitations under the License.
       $tr = this.$tbody.find('tr:first-child');
       if ($tr.length) {
         return this._selectRow($tr);
+      }
+    };
+
+    SimpleDataGrid.prototype._isColumnSortable = function(field_name) {
+      if (!this._getOrderByColumn()) {
+        return false;
+      } else {
+        if (this.options.unsorted_columns) {
+          return $.inArray(field_name, this.options.unsorted_columns) === -1;
+        } else {
+          return true;
+        }
       }
     };
 
