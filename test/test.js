@@ -52,7 +52,7 @@ module('simple-data-grid', {
         $table1.simple_datagrid('destroy');
         $table1.remove();
 
-        $.mockjaxClear();
+        $.mockjax.clear();
     }
 });
 
@@ -294,7 +294,7 @@ test('pagination', function() {
 
     var $table1 = $('#table1');
 
-    // -- init table    
+    // -- init table
     $table1.simple_datagrid({ url: '/my_data/' });
 
     function runSteps($table, steps) {
@@ -499,7 +499,7 @@ test('setParameter', function() {
             ['Avocado', 'Persea americana']
         ];
     }
-    
+
     $.mockjax({
         url: '*',
         response: getResponse
