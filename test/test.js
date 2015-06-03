@@ -24,7 +24,7 @@ function formatColumnNames($table) {
 module('utils');
 
 test('slugify', function() {
-    slugify = SimpleDataGrid.slugify;
+    slugify = window.SimpleDataGrid.slugify;
 
     equal(slugify(''), '');
     equal(slugify('abc'), 'abc');

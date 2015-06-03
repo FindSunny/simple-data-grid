@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ###
 
-$ = @jQuery
+$ = jQuery
 
 
 class SimpleWidget
@@ -101,4 +101,5 @@ class SimpleWidget
                 else
                     return callFunction($el, function_name, args)
 
-@SimpleWidget = SimpleWidget
+
+module.exports = SimpleWidget

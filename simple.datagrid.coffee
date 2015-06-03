@@ -13,10 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ###
+SimpleWidget = require './simple.widget'
 
-$ = @jQuery
-
-SimpleWidget = @SimpleWidget
+$ = jQuery
 
 
 min = (value1, value2) ->
@@ -714,7 +713,7 @@ parseUrl = (url) ->
         return [base_url, query_parameters]
 
 
-@SimpleDataGrid = SimpleDataGrid
+window.SimpleDataGrid = SimpleDataGrid
 SimpleDataGrid.slugify = slugify
 
 SortOrder =
