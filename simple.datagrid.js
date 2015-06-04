@@ -476,17 +476,15 @@ SimpleDataGrid = (function(superClass) {
         return html;
       };
     })(this);
-    generateTr = (function(_this) {
-      return function(row) {
-        var data_string;
-        if (row.id) {
-          data_string = " data-id=\"" + row.id + "\"";
-        } else {
-          data_string = "";
-        }
-        return "<tr" + data_string + ">";
-      };
-    })(this);
+    generateTr = function(row) {
+      var data_string;
+      if (row.id) {
+        data_string = " data-id=\"" + row.id + "\"";
+      } else {
+        data_string = "";
+      }
+      return "<tr" + data_string + ">";
+    };
     fillRows = (function(_this) {
       return function(rows) {
         var $tr, html, j, len1, previous_row, row;

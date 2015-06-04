@@ -162,7 +162,7 @@ class SimpleDataGrid extends SimpleWidget
         generateFromThElements = =>
             $th_elements = @$el.find('th')
             $th_elements.each(
-                (i, th) =>
+                (i, th) ->
                     $th = $(th)
 
                     title = $th.text()
@@ -383,7 +383,7 @@ class SimpleDataGrid extends SimpleWidget
 
             return html
 
-        generateTr = (row) =>
+        generateTr = (row) ->
             if row.id
                 data_string = " data-id=\"#{ row.id }\""
             else
