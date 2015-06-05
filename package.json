@@ -8,7 +8,8 @@
   "devDependencies": {
     "coffee-script": "^1.9.3",
     "gulp": "^3.9.0",
-    "gulp-coffeeify": "^0.1.8"
+    "gulp-coffeeify": "^0.1.8",
+    "gulp-coffeelint": "^0.5.0"
   },
   "author": "Marco Braak <marco.braak@planet.nl>",
   "license": "Apache2",
