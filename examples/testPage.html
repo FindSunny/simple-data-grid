@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Tutorial for simple-data-grid</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="../simple.datagrid.css">
+		<link rel="stylesheet" href="../extra/bower_components/prism/themes/prism-okaidia.css">
+		<link rel="stylesheet" href="../extra/documentation.css">
+		<script src="../extra/bower_components/jquery/dist/jquery.min.js"></script>
+		<script src="../simple.datagrid.js"></script>
+	</head>
+	<body>
+		<div class = 'container'>
+			<table id="demo-table">
+			  <thead>
+				<tr>
+				  <th>Name</th>
+				  <th>Latin name</th>
+				</tr>
+			  </thead>
+			</table>
+		</div>
+		<script>
+			//$('#demo-table').simple_datagrid();
+			var data = [
+			  {
+				"latin_name": "Persea americana",
+				"name": "Avocado"
+			  },
+			  {
+				"latin_name": "Capsicum annuum",
+				"name": "Bell pepper"
+			  },
+			  {
+				"latin_name1": "Capsicum annuum",
+				"name": "Bell pepper1"
+			  },
+			  {
+				"latin_name2": "Capsicum annuum",
+				"name": "Bell pepper2"
+			  }
+			];
+
+			$('#demo-table').simple_datagrid(
+			  {
+				// 数据入口
+				data: data,
+				// 初期添加事件和渲染
+				on_generate_tr: function($row_element, row_data){
+					//$row_element.click(function(){
+					//	//console.log("clicked: " + row_data);
+					//	$('#demo-table').simple_datagrid('selectRow', 0);
+					//});
+					
+					var $checkTD = $row_element.find("td").eq(1);
+					var checked = "";
+					if(row_data.name !== "Avocado") {
+						checked = "checked='checked'";
+					}
+					$checkTD.html("<input type='checkbox'" + checked + " onclick =''/>");
+				},
+				keyboard_support: true,
+				selection: 1
+			  }
+			);
+			
+			$('#demo-table').bind(
+			  'datagrid.select',
+			  function(e) {
+				// Row is selected
+				console.log(e.row);
+				var row = $('#demo-table').simple_datagrid('getSelectedRow');
+				var sel = $('#demo-table').simple_datagrid('getSelection');
+				var selectedRows = $('#demo-table').simple_datagrid('getSelectedRows');
+				
+				//alert(row);
+				//alert(sel);
+				console.log(selectedRows);
+				//$('#demo-table').simple_datagrid('selectRow', 0);
+			  }
+			);
+			
+			$('#demo-table').simple_datagrid('selectRow', 0);
+			
+			function formatterUseCopy(val,row,index){
+				var checkedStauts = "";
+				if(val){
+					checkedStauts = "checked='checked'";
+				}
+				return "<input type='checkbox'" + checkedStauts + "onclick ='setSelectDisplayItemUseCopy(this)'/>";
+			}
+		</script>
+	</body>
+</html>
