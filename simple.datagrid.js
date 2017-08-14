@@ -69,9 +69,14 @@ SimpleDataGrid = (function(superClass) {
     auto_escape: true,
     keyboard_support: false,
     parameters: {},
-    unsorted_columns: null
+    unsorted_columns: null,
+	selection: 0
   };
 
+  SimpleDataGrid.prototype.getSelection = function() {
+    return this.options.selection;
+  };
+  
   SimpleDataGrid.prototype.loadData = function(data) {
     return this._fillGrid(data);
   };
@@ -81,11 +86,19 @@ SimpleDataGrid = (function(superClass) {
   };
 
   SimpleDataGrid.prototype.getSelectedRow = function() {
-    if (this.$selected_row) {
-      return this.$selected_row.data('row');
-    } else {
-      return null;
-    }
+	if (this.$selected_rows) {
+	  return this.$selected_row.data('row');
+	} else {
+	  return null;
+	}
+  };
+  
+  SimpleDataGrid.prototype.getSelectedRows = function() {
+	var selectedArr = [];
+	$.each(this.$selected_rows, function(n, tr){
+		selectedArr.push($(this).data('row'));
+	});
+	return selectedArr;
   };
 
   SimpleDataGrid.prototype.reload = function() {
@@ -156,6 +169,7 @@ SimpleDataGrid = (function(superClass) {
     SimpleDataGrid.__super__._init.call(this);
     this._url = this._getBaseUrl();
     this.$selected_row = null;
+	this.$selected_rows = null;
     this.current_page = 1;
     this.parameters = this.options.parameters;
     this.order_by = this._parseOrderByOption();
@@ -175,6 +189,7 @@ SimpleDataGrid = (function(superClass) {
     this.order_by = null;
     this.sort_order = null;
     this.$selected_row = null;
+	this.$selected_rows = [];
     this.current_page = 1;
     this._url = null;
     return SimpleDataGrid.__super__._deinit.call(this);
@@ -618,7 +633,12 @@ SimpleDataGrid = (function(superClass) {
   SimpleDataGrid.prototype._clickRow = function(e) {
     var $tr, event;
     $tr = $(e.target).closest('tr');
-    this._selectRow($tr);
+	if (this.options.selection === 0) {
+		this._selectRow($tr);
+	} else {
+		this._selectRows($tr);
+	}
+	
     event = $.Event('datagrid.select');
     event.row = $tr.data('row');
     event.$row = $tr;
@@ -630,6 +650,17 @@ SimpleDataGrid = (function(superClass) {
       this.$selected_row.removeClass('sdg-selected');
     }
     $tr.addClass('sdg-selected');
+    return this.$selected_row = $tr;
+  };
+  
+  SimpleDataGrid.prototype._selectRows = function($tr) {
+    if (event.ctrlKey) {
+		$tr.toggleClass('sdg-selected');
+	} else {
+		this.$tbody.find("tr.sdg-selected").removeClass('sdg-selected');
+		$tr.addClass('sdg-selected');
+	}
+	this.$selected_rows = this.$tbody.find('tr.sdg-selected');
     return this.$selected_row = $tr;
   };
 
@@ -751,6 +782,7 @@ SimpleDataGrid = (function(superClass) {
   };
 
   SimpleDataGrid.prototype._moveDown = function() {
+	this.$tbody.find('tr.sdg-selected').removeClass('sdg-selected');
     var $tr;
     if (!this.$selected_row) {
       this._selectFirstRow();
@@ -767,6 +799,7 @@ SimpleDataGrid = (function(superClass) {
   };
 
   SimpleDataGrid.prototype._moveUp = function() {
+	this.$tbody.find('tr.sdg-selected').removeClass('sdg-selected');
     var $tr;
     if (!this.$selected_row) {
       this._selectFirstRow();
